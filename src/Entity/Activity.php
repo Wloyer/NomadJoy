@@ -32,7 +32,7 @@ class Activity
     private ?string $type = null;
 
     #[ORM\ManyToOne(inversedBy: 'activities')]
-    private ?category $category = null;
+    private ?Category $category = null;
 
     #[ORM\ManyToOne(inversedBy: 'activities')]
     private ?user $userID = null;
@@ -113,12 +113,12 @@ class Activity
         return $this;
     }
 
-    public function getCategory(): ?category
+    public function getCategory(): ?Category
     {
         return $this->category;
     }
 
-    public function setCategory(?category $category): static
+    public function setCategory(?Category $category): static
     {
         $this->category = $category;
 

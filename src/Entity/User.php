@@ -6,6 +6,7 @@ use App\Repository\UserRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use JMS\Serializer\Annotation as Serializer;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
 
@@ -17,36 +18,43 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
+    #[Serializer\Groups(['list', 'detail'])]
     private ?int $id = null;
 
     #[ORM\Column(length: 180)]
+    #[Serializer\Groups(['list', 'detail'])]
     private ?string $email = null;
 
     /**
      * @var list<string> The user roles
      */
     #[ORM\Column]
+    #[Serializer\Groups(['detail'])]
     private array $roles = [];
 
     /**
      * @var string The hashed password
      */
     #[ORM\Column]
+    #[Serializer\Groups(['detail'])]
     private ?string $password = null;
 
     #[ORM\Column(length: 255)]
+    #[Serializer\Groups(['list', 'detail'])]
     private ?string $name = null;
 
     /**
      * @var Collection<int, Activity>
      */
     #[ORM\OneToMany(targetEntity: Activity::class, mappedBy: 'userID')]
+    #[Serializer\Groups(['detail'])]
     private Collection $activities;
 
     /**
      * @var Collection<int, Rating>
      */
     #[ORM\OneToMany(targetEntity: Rating::class, mappedBy: 'UserRating')]
+    #[Serializer\Groups(['detail'])]
     private Collection $ratings;
 
     public function __construct()

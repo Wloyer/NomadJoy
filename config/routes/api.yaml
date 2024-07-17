@@ -1,0 +1,24 @@
+api_user_get_all:
+    path: /api/users
+    controller: App\Controller\UserController::getUsers
+    methods: GET
+
+api_user_get_one:
+    path: /api/users/{id}
+    controller: App\Controller\UserController::getUserById
+    methods: GET
+
+api_user_post:
+    path: /api/users
+    controller: App\Controller\UserController::postUser
+    methods: POST
+
+api_user_put:
+    path: /api/users/{id}
+    controller: App\Controller\UserController::putUser
+    methods: PUT
+
+api_user_delete:
+    path: /api/users/{id}
+    controller: App\Controller\UserController::deleteUser
+    methods: DELETE
