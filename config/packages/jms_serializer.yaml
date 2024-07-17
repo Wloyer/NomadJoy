@@ -1,0 +1,24 @@
+jms_serializer:
+    handlers:
+        datetime:
+            default_format: 'Y-m-d H:i:s'
+            default_timezone: 'UTC'
+    metadata:
+        auto_detection: true
+
+when@prod:
+    jms_serializer:
+        visitors:
+            json_serialization:
+                options:
+                    - JSON_UNESCAPED_SLASHES
+                    - JSON_PRESERVE_ZERO_FRACTION
+
+when@dev:
+    jms_serializer:
+        visitors:
+            json_serialization:
+                options:
+                    - JSON_PRETTY_PRINT
+                    - JSON_UNESCAPED_SLASHES
+                    - JSON_PRESERVE_ZERO_FRACTION
