@@ -1,3 +1,4 @@
+#User
 api_user_get_all:
     path: /api/users
     controller: App\Controller\UserController::getUsers
@@ -21,4 +22,56 @@ api_user_put:
 api_user_delete:
     path: /api/users/{id}
     controller: App\Controller\UserController::deleteUser
+    methods: DELETE
+
+#Activity
+api_activity_get_all:
+    path: /api/activities
+    controller: App\Controller\ActivityController::getActivities
+    methods: GET
+
+api_activity_get_one:
+    path: /api/activities/{id}
+    controller: App\Controller\ActivityController::getActivityById
+    methods: GET
+
+api_activity_post:
+    path: /api/activities
+    controller: App\Controller\ActivityController::postActivity
+    methods: POST
+
+api_activity_put:
+    path: /api/activities/{id}
+    controller: App\Controller\ActivityController::putActivity
+    methods: PUT
+
+api_activity_delete:
+    path: /api/activities/{id}
+    controller: App\Controller\ActivityController::deleteActivity
+    methods: DELETE
+
+#Category
+api_category_get_all:
+    path: /api/categories
+    controller: App\Controller\CategoryController::getCategories
+    methods: GET
+
+api_category_get_one:
+    path: /api/categories/{id}
+    controller: App\Controller\CategoryController::getCategoryById
+    methods: GET
+
+api_category_post:
+    path: /api/categories
+    controller: App\Controller\CategoryController::postCategory
+    methods: POST
+
+api_category_put:
+    path: /api/categories/{id}
+    controller: App\Controller\CategoryController::putCategory
+    methods: PUT
+
+api_category_delete:
+    path: /api/categories/{id}
+    controller: App\Controller\CategoryController::deleteCategory
     methods: DELETE

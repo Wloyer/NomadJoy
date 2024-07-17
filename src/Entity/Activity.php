@@ -7,6 +7,7 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
+use JMS\Serializer\Annotation as Serializer;
 
 #[ORM\Entity(repositoryClass: ActivityRepository::class)]
 class Activity
@@ -14,33 +15,44 @@ class Activity
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
+    #[Serializer\Groups(['list', 'detail'])]
     private ?int $id = null;
 
     #[ORM\Column(length: 255)]
+    #[Serializer\Groups(['list', 'detail'])]
     private ?string $title = null;
 
-    #[ORM\Column(length: 255)]
+    #[ORM\Column(type: Types::TEXT)]
+    #[Serializer\Groups(['list', 'detail'])]
     private ?string $description = null;
 
     #[ORM\Column(type: Types::DATETIME_MUTABLE)]
+    #[Serializer\Groups(['list', 'detail'])]
     private ?\DateTimeInterface $datePublication = null;
 
     #[ORM\Column(length: 255)]
+    #[Serializer\Groups(['list', 'detail'])]
     private ?string $author = null;
 
     #[ORM\Column(length: 255)]
+    #[Serializer\Groups(['list', 'detail'])]
     private ?string $type = null;
 
     #[ORM\ManyToOne(inversedBy: 'activities')]
+    #[ORM\JoinColumn(nullable: false)]
+    #[Serializer\Groups(['list', 'detail'])]
     private ?Category $category = null;
 
     #[ORM\ManyToOne(inversedBy: 'activities')]
-    private ?user $userID = null;
+    #[ORM\JoinColumn(nullable: false)]
+    #[Serializer\Groups(['list', 'detail'])]
+    private ?User $userID = null;
 
     /**
      * @var Collection<int, Rating>
      */
     #[ORM\OneToMany(targetEntity: Rating::class, mappedBy: 'Activity')]
+    #[Serializer\Groups(['list', 'detail'])]
     private Collection $ratings;
 
     public function __construct()
@@ -125,12 +137,12 @@ class Activity
         return $this;
     }
 
-    public function getUserID(): ?user
+    public function getUserID(): ?User
     {
         return $this->userID;
     }
 
-    public function setUserID(?user $userID): static
+    public function setUserID(?User $userID): static
     {
         $this->userID = $userID;
 
