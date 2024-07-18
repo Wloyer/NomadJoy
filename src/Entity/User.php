@@ -9,6 +9,7 @@ use Doctrine\ORM\Mapping as ORM;
 use JMS\Serializer\Annotation as Serializer;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
+use Symfony\Component\Serializer\Annotation\Groups;
 
 #[ORM\Entity(repositoryClass: UserRepository::class)]
 #[ORM\Table(name: '`user`')]
@@ -18,43 +19,33 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
-    #[Serializer\Groups(['list', 'detail'])]
+    #[Groups(['list', 'detail'])]
     private ?int $id = null;
 
     #[ORM\Column(length: 180)]
-    #[Serializer\Groups(['list', 'detail'])]
+    #[Groups(['list', 'detail'])]
     private ?string $email = null;
 
-    /**
-     * @var list<string> The user roles
-     */
     #[ORM\Column]
-    #[Serializer\Groups(['detail'])]
+    #[Groups(['detail'])]
     private array $roles = [];
 
-    /**
-     * @var string The hashed password
-     */
     #[ORM\Column]
-    #[Serializer\Groups(['detail'])]
+    #[Groups(['detail'])]
     private ?string $password = null;
 
     #[ORM\Column(length: 255)]
-    #[Serializer\Groups(['list', 'detail'])]
+    #[Groups(['list', 'detail'])]
     private ?string $name = null;
 
-    /**
-     * @var Collection<int, Activity>
-     */
-    #[ORM\OneToMany(targetEntity: Activity::class, mappedBy: 'userID')]
+    #[ORM\OneToMany(targetEntity: Activity::class, mappedBy: 'user')]
     #[Serializer\Groups(['detail'])]
+    #[Serializer\MaxDepth(1)]
     private Collection $activities;
 
-    /**
-     * @var Collection<int, Rating>
-     */
-    #[ORM\OneToMany(targetEntity: Rating::class, mappedBy: 'UserRating')]
-    #[Serializer\Groups(['detail'])]
+    #[ORM\OneToMany(targetEntity: Rating::class, mappedBy: 'user')]
+    #[Groups(['detail'])]
+    #[Serializer\MaxDepth(1)]
     private Collection $ratings;
 
     public function __construct()
@@ -80,32 +71,19 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         return $this;
     }
 
-    /**
-     * A visual identifier that represents this user.
-     *
-     * @see UserInterface
-     */
     public function getUserIdentifier(): string
     {
         return (string) $this->email;
     }
 
-    /**
-     * @see UserInterface
-     * @return list<string>
-     */
     public function getRoles(): array
     {
         $roles = $this->roles;
-        // guarantee every user at least has ROLE_USER
         $roles[] = 'ROLE_USER';
 
         return array_unique($roles);
     }
 
-    /**
-     * @param list<string> $roles
-     */
     public function setRoles(array $roles): static
     {
         $this->roles = $roles;
@@ -113,9 +91,6 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         return $this;
     }
 
-    /**
-     * @see PasswordAuthenticatedUserInterface
-     */
     public function getPassword(): string
     {
         return $this->password;
@@ -128,13 +103,9 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         return $this;
     }
 
-    /**
-     * @see UserInterface
-     */
     public function eraseCredentials(): void
     {
-        // If you store any temporary, sensitive data on the user, clear it here
-        // $this->plainPassword = null;
+        // Clear temporary, sensitive data here
     }
 
     public function getName(): ?string
@@ -149,9 +120,6 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         return $this;
     }
 
-    /**
-     * @return Collection<int, Activity>
-     */
     public function getActivities(): Collection
     {
         return $this->activities;
@@ -170,7 +138,6 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     public function removeActivity(Activity $activity): static
     {
         if ($this->activities->removeElement($activity)) {
-            // set the owning side to null (unless already changed)
             if ($activity->getUserID() === $this) {
                 $activity->setUserID(null);
             }
@@ -179,9 +146,6 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         return $this;
     }
 
-    /**
-     * @return Collection<int, Rating>
-     */
     public function getRatings(): Collection
     {
         return $this->ratings;
@@ -200,7 +164,6 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     public function removeRating(Rating $rating): static
     {
         if ($this->ratings->removeElement($rating)) {
-            // set the owning side to null (unless already changed)
             if ($rating->getUserRating() === $this) {
                 $rating->setUserRating(null);
             }

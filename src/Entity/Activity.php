@@ -8,6 +8,7 @@ use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 use JMS\Serializer\Annotation as Serializer;
+use Symfony\Component\Serializer\Annotation\Groups;
 
 #[ORM\Entity(repositoryClass: ActivityRepository::class)]
 class Activity
@@ -15,44 +16,43 @@ class Activity
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
-    #[Serializer\Groups(['list', 'detail'])]
+    #[Groups(['list', 'detail'])]
     private ?int $id = null;
 
     #[ORM\Column(length: 255)]
-    #[Serializer\Groups(['list', 'detail'])]
+    #[Groups(['list', 'detail'])]
     private ?string $title = null;
 
     #[ORM\Column(type: Types::TEXT)]
-    #[Serializer\Groups(['list', 'detail'])]
+    #[Groups(['list', 'detail'])]
     private ?string $description = null;
 
     #[ORM\Column(type: Types::DATETIME_MUTABLE)]
-    #[Serializer\Groups(['list', 'detail'])]
+    #[Groups(['list', 'detail'])]
     private ?\DateTimeInterface $datePublication = null;
 
     #[ORM\Column(length: 255)]
-    #[Serializer\Groups(['list', 'detail'])]
+    #[Groups(['list', 'detail'])]
     private ?string $author = null;
 
     #[ORM\Column(length: 255)]
-    #[Serializer\Groups(['list', 'detail'])]
+    #[Groups(['list', 'detail'])]
     private ?string $type = null;
 
-    #[ORM\ManyToOne(inversedBy: 'activities')]
+    #[ORM\ManyToOne(targetEntity: Category::class, inversedBy: 'activities')]
     #[ORM\JoinColumn(nullable: false)]
-    #[Serializer\Groups(['list', 'detail'])]
+    #[Groups(['list', 'detail'])]
+    #[Serializer\MaxDepth(1)]
     private ?Category $category = null;
 
-    #[ORM\ManyToOne(inversedBy: 'activities')]
-    #[ORM\JoinColumn(nullable: false)]
-    #[Serializer\Groups(['list', 'detail'])]
-    private ?User $userID = null;
+    #[ORM\ManyToOne(targetEntity: User::class, inversedBy: 'activities')]
+    #[ORM\JoinColumn(name: 'user_id', referencedColumnName: 'id')]
+    #[Groups(['list', 'detail'])]
+    private ?User $user = null;
 
-    /**
-     * @var Collection<int, Rating>
-     */
-    #[ORM\OneToMany(targetEntity: Rating::class, mappedBy: 'Activity')]
-    #[Serializer\Groups(['list', 'detail'])]
+    #[ORM\OneToMany(targetEntity: Rating::class, mappedBy: 'activity')]
+    #[Groups([ 'detail'])]
+    #[Serializer\MaxDepth(1)]
     private Collection $ratings;
 
     public function __construct()
@@ -139,19 +139,16 @@ class Activity
 
     public function getUserID(): ?User
     {
-        return $this->userID;
+        return $this->user;
     }
 
-    public function setUserID(?User $userID): static
+    public function setUserID(?User $user): static
     {
-        $this->userID = $userID;
+        $this->user = $user;
 
         return $this;
     }
 
-    /**
-     * @return Collection<int, Rating>
-     */
     public function getRatings(): Collection
     {
         return $this->ratings;
@@ -170,7 +167,6 @@ class Activity
     public function removeRating(Rating $rating): static
     {
         if ($this->ratings->removeElement($rating)) {
-            // set the owning side to null (unless already changed)
             if ($rating->getActivity() === $this) {
                 $rating->setActivity(null);
             }
