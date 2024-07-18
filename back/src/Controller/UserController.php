@@ -83,7 +83,7 @@ class UserController extends AbstractController
         $user = new User();
         $user->setName($data['name']);
         $user->setEmail($data['email']);
-        $user->setRoles($data['roles']);
+        $user->setRoles(['ROLE_USER']);
 
         // Hash the password before setting it
         $hashedPassword = $this->passwordHasher->hashPassword($user, $data['password']);
@@ -96,6 +96,7 @@ class UserController extends AbstractController
 
         $this->entityManager->persist($user);
         $this->entityManager->flush();
+        
 
         return $this->json(['message' => 'User created successfully', 'user' => $user], Response::HTTP_CREATED, [], ['groups' => 'detail']);
     }

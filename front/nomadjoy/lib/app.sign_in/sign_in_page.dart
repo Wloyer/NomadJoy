@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:nomadjoy/app.sign_in/sign_in_button.dart';
 import 'package:nomadjoy/app.sign_in/sign_in_email.dart';
-
+import 'package:nomadjoy/common_widget/constants.dart';
+import 'package:google_fonts/google_fonts.dart';
+import 'package:nomadjoy/app.sign_in/register_page.dart';
 
 class SignInPage extends StatelessWidget {
   const SignInPage({super.key});
@@ -10,8 +12,9 @@ class SignInPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        automaticallyImplyLeading: false, // Supprime la flèche de retour arrière
         title: const Text(
-          'Sign in',
+          'Bienvenue',
           textAlign: TextAlign.center,
           style: TextStyle(
             fontSize: 32.0,
@@ -28,30 +31,41 @@ class SignInPage extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: <Widget>[
             const SizedBox(height: 8.0),
+            // Logo "nomadjoy" au centre
+            Center(
+              child: Image.asset('images/nomadjoy_logo.png', height: 100),
+            ),
+            const SizedBox(height: 32.0),
             SignInButton(
-              text: 'Se connecter',
+              text: 'Connexion',
               textColor: Colors.white,
-              color: const Color(0xFFB9848C),
+              color: purpuleColor,
               onPressed: () {
                 Navigator.push(
                   context,
                   MaterialPageRoute(builder: (context) => const SignInEmail()),
                 );
               },
+              borderRadius: 30.0, // Arrondir les bords du bouton
             ),
             const SizedBox(height: 8.0),
             const Text(
-              'or',
+              'ou',
               textAlign: TextAlign.center,
               style: TextStyle(fontSize: 14.0, color: Colors.black87),
             ),
             const SizedBox(height: 8.0),
             SignInButton(
-              text: 'Login',
-              textColor: Colors.black87,
-              color: Color(0x2F70AFFF),
+              text: 'Créer un compte',
+              textColor: Colors.white,
+              color: blueColor,
               onPressed: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => const RegisterPage()),
+                );
               },
+              borderRadius: 30.0, 
             ),
             const SizedBox(height: 8.0),
           ],
