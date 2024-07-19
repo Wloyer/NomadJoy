@@ -60,10 +60,8 @@ class SignInPage extends StatelessWidget {
               textColor: Colors.white,
               color: blueColor,
               onPressed: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (context) => const RegisterPage()),
-                );
+               
+               
               },
               borderRadius: 30.0, 
             ),

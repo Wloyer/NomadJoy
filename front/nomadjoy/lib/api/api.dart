@@ -2,56 +2,56 @@ import 'dart:convert';
 import 'package:http/http.dart' as http;
 
 class ApiService {
-  static const String baseUrl = 'http://127.0.0.1:8000'; // Remplacez par l'adresse IP de votre machine
+  static const String baseUrl = 'http://127.0.0.1:8000';
 
-  static Future<Map<String, dynamic>> signIn(String email, String password) async {
-    const url = '$baseUrl/api/login';
-    try {
-      final response = await http.post(
-        Uri.parse(url),
-        headers: <String, String>{
-          'Content-Type': 'application/json; charset=UTF-8',
-        },
-        body: jsonEncode(<String, String>{
-          'email': email,
-          'password': password,
-        }),
-      );
+  static Future<List<dynamic>> fetchCategories() async {
+    final response = await http.get(Uri.parse('$baseUrl/api/categories'));
 
-      if (response.statusCode == 200) {
-        return json.decode(response.body);
-      } else {
-        throw Exception('Failed to sign in: ${response.statusCode}');
-      }
-    } catch (e) {
-      throw Exception('Error signing in: $e');
+    if (response.statusCode == 200) {
+      return json.decode(response.body);
+    } else {
+      throw Exception('Failed to load categories');
     }
   }
 
-  static Future<Map<String, dynamic>> register(String name, String email, String password) async {
-    const url = '$baseUrl/api/users';
-    try {
-      final response = await http.post(
-        Uri.parse(url),
-        headers: <String, String>{
-          'Content-Type': 'application/json; charset=UTF-8',
-        },
-        body: jsonEncode(<String, String>{
-          'name': name,
-          'email': email,
-          'password': password,
-        }),
-      );
+  static Future<List<dynamic>> fetchActivities() async {
+    final response = await http.get(Uri.parse('$baseUrl/api/activities'));
 
-      if (response.statusCode == 201) {
-        return json.decode(response.body);
-      } else if (response.statusCode == 409) {
-        return json.decode(response.body);
-      } else {
-        throw Exception('Failed to register: ${response.statusCode}');
-      }
-    } catch (e) {
-      throw Exception('Error registering: $e');
+    if (response.statusCode == 200) {
+      return json.decode(response.body);
+    } else {
+      throw Exception('Failed to load activities');
+    }
+  }
+
+  static Future<void> addActivity(Map<String, dynamic> data) async {
+    final response = await http.post(
+      Uri.parse('$baseUrl/api/activities'),
+      headers: <String, String>{
+        'Content-Type': 'application/json; charset=UTF-8',
+      },
+      body: jsonEncode(data),
+    );
+
+    if (response.statusCode != 201) {
+      throw Exception('Failed to add activity');
+    }
+  }
+
+  static Future<void> rateActivity(int activityId, int userId, int rating) async {
+    final response = await http.post(
+      Uri.parse('$baseUrl/api/activities/$activityId/rate'),
+      headers: <String, String>{
+        'Content-Type': 'application/json; charset=UTF-8',
+      },
+      body: jsonEncode({
+        'user_id': userId,
+        'note': rating,
+      }),
+    );
+
+    if (response.statusCode != 201) {
+      throw Exception('Failed to rate activity');
     }
   }
 }

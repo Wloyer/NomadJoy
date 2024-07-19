@@ -1,10 +1,7 @@
-import 'dart:convert'; // Pour utiliser jsonEncode et jsonDecode
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:nomadjoy/api/api.dart'; // Importez le fichier API
-import 'package:nomadjoy/common_widget/constants.dart';
-
-import 'package:nomadjoy/app.sign_in/register_page.dart'; // Importez la page d'enregistrement
+import 'package:nomadjoy/common_widget/constants.dart'; // Importez votre fichier de constantes
+import 'package:nomadjoy/main_page/main_page.dart'; // Importez la page MainPage
 
 class SignInEmail extends StatefulWidget {
   const SignInEmail({super.key});
@@ -26,20 +23,13 @@ class _SignInEmailState extends State<SignInEmail> {
     super.dispose();
   }
 
-  Future<void> _signIn() async {
+  void _signIn() {
     if (_formKey.currentState?.validate() ?? false) {
-      final email = _emailController.text;
-      final password = _passwordController.text;
-      try {
-        final data = await ApiService.signIn(email, password);
-        // La connexion a réussi
-        print('Token: ${data['token']}');
-        // Navigator.push(...);
-      } catch (error) {
-        setState(() {
-          _errorMessage = error.toString();
-        });
-      }
+
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(builder: (context) => const MainPage()),
+      );
     }
   }
 
@@ -126,24 +116,6 @@ class _SignInEmailState extends State<SignInEmail> {
                   style: GoogleFonts.lato(
                     textStyle: const TextStyle(
                       color: Colors.white,
-                    ),
-                  ),
-                ),
-              ),
-              const SizedBox(height: 10),
-              TextButton(
-                onPressed: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(builder: (context) => const RegisterPage()),
-                  );
-                },
-                child: Text(
-                  'Créer un compte',
-                  style: GoogleFonts.lato(
-                    textStyle: const TextStyle(
-                      color: blueColor,
-                      fontSize: 16,
                     ),
                   ),
                 ),

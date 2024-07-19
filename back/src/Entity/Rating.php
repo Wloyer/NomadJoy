@@ -3,9 +3,8 @@
 namespace App\Entity;
 
 use App\Repository\RatingRepository;
-use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
-use JMS\Serializer\Annotation as Serializer;
+use Symfony\Component\Serializer\Annotation\Groups;
 
 #[ORM\Entity(repositoryClass: RatingRepository::class)]
 class Rating
@@ -13,40 +12,42 @@ class Rating
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
-    #[Serializer\Groups(['list', 'detail'])]
+    #[Groups(['list', 'detail'])]
     private ?int $id = null;
 
     #[ORM\Column]
-    #[Serializer\Groups(['list', 'detail'])]
-    private ?float $note = null;
+    #[Groups(['list', 'detail'])]
+    private ?int $note = null;
 
-    #[ORM\Column(length: 255)]
-    #[Serializer\Groups(['list', 'detail'])]
+    #[ORM\Column(type: "text", nullable: true)]
+    #[Groups(['list', 'detail'])]
     private ?string $comments = null;
 
-    #[ORM\Column(type: Types::DATETIME_MUTABLE)]
-    #[Serializer\Groups(['list', 'detail'])]
+    #[ORM\Column(type: "datetime")]
+    #[Groups(['list', 'detail'])]
     private ?\DateTimeInterface $date = null;
 
-    #[ORM\ManyToOne(inversedBy: 'ratings')]
-    #[Serializer\Groups(['list', 'detail'])]
-    private ?activity $Activity = null;
+    #[ORM\ManyToOne(targetEntity: Activity::class, inversedBy: 'ratings')]
+    #[ORM\JoinColumn(nullable: false)]
+    #[Groups(['list', 'detail'])]
+    private ?Activity $activity = null;
 
-    #[ORM\ManyToOne(inversedBy: 'ratings')]
-    #[Serializer\Groups(['list', 'detail'])]
-    private ?user $UserRating = null;
+    #[ORM\ManyToOne(targetEntity: User::class)]
+    #[ORM\JoinColumn(nullable: false)]
+    #[Groups(['list', 'detail'])]
+    private ?User $userRating = null;
 
     public function getId(): ?int
     {
         return $this->id;
     }
 
-    public function getNote(): ?float
+    public function getNote(): ?int
     {
         return $this->note;
     }
 
-    public function setNote(float $note): static
+    public function setNote(int $note): self
     {
         $this->note = $note;
 
@@ -58,7 +59,7 @@ class Rating
         return $this->comments;
     }
 
-    public function setComments(string $comments): static
+    public function setComments(?string $comments): self
     {
         $this->comments = $comments;
 
@@ -70,33 +71,33 @@ class Rating
         return $this->date;
     }
 
-    public function setDate(\DateTimeInterface $date): static
+    public function setDate(\DateTimeInterface $date): self
     {
         $this->date = $date;
 
         return $this;
     }
 
-    public function getActivity(): ?activity
+    public function getActivity(): ?Activity
     {
-        return $this->Activity;
+        return $this->activity;
     }
 
-    public function setActivity(?activity $Activity): static
+    public function setActivity(?Activity $activity): self
     {
-        $this->Activity = $Activity;
+        $this->activity = $activity;
 
         return $this;
     }
 
-    public function getUserRating(): ?user
+    public function getUserRating(): ?User
     {
-        return $this->UserRating;
+        return $this->userRating;
     }
 
-    public function setUserRating(?user $UserRating): static
+    public function setUserRating(?User $userRating): self
     {
-        $this->UserRating = $UserRating;
+        $this->userRating = $userRating;
 
         return $this;
     }

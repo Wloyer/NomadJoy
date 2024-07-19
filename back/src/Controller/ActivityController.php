@@ -35,9 +35,29 @@ class ActivityController extends AbstractController
     public function getActivities(ActivityRepository $activityRepository): Response
     {
         $activities = $activityRepository->findAll();
-        $data = $this->serializer->serialize($activities, 'json', ['groups' => 'list']);
-        return new Response($data, Response::HTTP_OK, ['Content-Type' => 'application/json']);
+        $data = [];
+
+        foreach ($activities as $activity) {
+            $ratings = array_map(function ($rating) {
+                return $rating->getNote();
+            }, $activity->getRatings()->toArray());
+
+            $data[] = [
+                'id' => $activity->getId(),
+                'category_id' => $activity->getCategory()->getId(),
+                'user_id' => $activity->getUserID()->getId(),
+                'title' => $activity->getTitle(),
+                'description' => $activity->getDescription(),
+                'date_publication' => $activity->getDatePublication()->format('Y-m-d'),
+                'author' => $activity->getAuthor(),
+                'type' => $activity->getType(),
+                'ratings' => $ratings,
+            ];
+        }
+
+        return $this->json($data);
     }
+
 
     #[Route('/activities/{id}', name: 'get_activity_by_id', methods: ['GET'])]
     public function getActivityById(int $id, ActivityRepository $activityRepository): Response

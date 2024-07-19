@@ -11,7 +11,7 @@ class LoisirFormView extends StatelessWidget {
       appBar: AppBar(
       title: Text('Ajouter un loisir'),
       ),
-      body: LoisirForm(),
+      body: LoisirForm(oeuvreName: '',),
     );
   }
 

@@ -48,10 +48,10 @@ class Activity
     #[ORM\ManyToOne(targetEntity: User::class, inversedBy: 'activities')]
     #[ORM\JoinColumn(name: 'user_id', referencedColumnName: 'id')]
     #[Groups(['list', 'detail'])]
-    private ?User $user = null;
+    private ?User $userId = null;
 
     #[ORM\OneToMany(targetEntity: Rating::class, mappedBy: 'activity')]
-    #[Groups([ 'detail'])]
+    #[Groups(['list', 'detail'])]
     #[Serializer\MaxDepth(1)]
     private Collection $ratings;
 
@@ -139,12 +139,12 @@ class Activity
 
     public function getUserID(): ?User
     {
-        return $this->user;
+        return $this->userId;
     }
 
-    public function setUserID(?User $user): static
+    public function setUserID(?User $userId): static
     {
-        $this->user = $user;
+        $this->userId = $userId;
 
         return $this;
     }

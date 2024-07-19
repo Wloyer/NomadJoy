@@ -75,3 +75,29 @@ api_category_delete:
     path: /api/categories/{id}
     controller: App\Controller\CategoryController::deleteCategory
     methods: DELETE
+
+    # Rating
+api_rating_get_all:
+    path: /api/ratings
+    controller: App\Controller\RatingController::getRatings
+    methods: GET
+
+api_rating_get_one:
+    path: /api/ratings/{id}
+    controller: App\Controller\RatingController::getRatingById
+    methods: GET
+
+api_rating_post:
+    path: /api/ratings
+    controller: App\Controller\RatingController::postRating
+    methods: POST
+
+api_rating_put:
+    path: /api/ratings/{id}
+    controller: App\Controller\RatingController::putRating
+    methods: PUT
+
+api_rating_delete:
+    path: /api/ratings/{id}
+    controller: App\Controller\RatingController::deleteRating
+    methods: DELETE
